@@ -11,12 +11,12 @@ namespace BaseTags
 		{
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Primary);
 		}
-	}
-	namespace Movement
-	{
-		UE_DECLARE_GAMEPLAY_TAG_EXTERN(Jump);
-		UE_DECLARE_GAMEPLAY_TAG_EXTERN(Sprint);
-		UE_DECLARE_GAMEPLAY_TAG_EXTERN(Crouch);
-		UE_DECLARE_GAMEPLAY_TAG_EXTERN(Slide);
+		
+		namespace Movement
+		{
+			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Jump);
+			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Sprint);
+			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Crouch);
+		}
 	}
 }

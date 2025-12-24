@@ -11,6 +11,7 @@
 #include "Character/BasePlayerCharacter.h"
 #include "GameFramework/Character.h"
 #include "GameplayTags/BaseTags.h"
+#include "Utils/DebugHelper.h"
 
 void ABasePlayerController::SetupInputComponent()
 {
@@ -77,32 +78,32 @@ void ABasePlayerController::SetGameInputMode()
 
 void ABasePlayerController::Jump()
 {
-	ActivateAbility(BaseTags::Movement::Jump);
+	ActivateAbility(BaseTags::Abilities::Movement::Jump);
 }
 
 void ABasePlayerController::StopJump()
 {
-	CancelAbility(BaseTags::Movement::Jump);
+	CancelAbility(BaseTags::Abilities::Movement::Jump);
 }
 
 void ABasePlayerController::SprintPressed()
 {
-	ActivateAbility(BaseTags::Movement::Sprint);
+	ActivateAbility(BaseTags::Abilities::Movement::Sprint);
 }
 
 void ABasePlayerController::SprintReleased()
 {
-	CancelAbility(BaseTags::Movement::Sprint);
+	CancelAbility(BaseTags::Abilities::Movement::Sprint);
 }
 
 void ABasePlayerController::CrouchPressed()
 {
-	ActivateAbility(BaseTags::Movement::Crouch);
+	ActivateAbility(BaseTags::Abilities::Movement::Crouch);
 }
 
 void ABasePlayerController::CrouchReleased()
 {
-	CancelAbility(BaseTags::Movement::Crouch);
+	CancelAbility(BaseTags::Abilities::Movement::Crouch);
 }
 
 void ABasePlayerController::Move(const FInputActionValue& Value)
@@ -157,6 +158,12 @@ void ABasePlayerController::ActivateAbility(const FGameplayTag& AbilityTag) cons
 void ABasePlayerController::CancelAbility(const FGameplayTag& AbilityTag) const
 {
 	if (!IsValid(GetCharacter())) return;
+
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn());
+	if (!IsValid(ASC)) return;
+
+	const FGameplayTagContainer TagContainer = AbilityTag.GetSingleTagContainer();
+	ASC->CancelAbilities(&TagContainer);
 }
 
 void ABasePlayerController::ActivatePrimaryAbility()
@@ -169,7 +176,7 @@ void ABasePlayerController::AdjustCamera(const FInputActionValue& Value)
 	ABasePlayerCharacter* PlayerCharacter = Cast<ABasePlayerCharacter>(GetPawn());
 	if (!IsValid(PlayerCharacter)) return;
 	
-	// float ArmLength = PlayerCharacter->GetArmLength();
-	// ArmLength= FMath::Clamp(ArmLength + (Value.Get<float>() * 10.0), 200.f, 500.f);
-	// PlayerCharacter->AdjustCamera(ArmLength);
+	float ArmLength = PlayerCharacter->GetArmLength();
+	ArmLength= FMath::Clamp(ArmLength + (Value.Get<float>() * 10.0), 200.f, 500.f);
+	PlayerCharacter->AdjustCamera(ArmLength);
 }

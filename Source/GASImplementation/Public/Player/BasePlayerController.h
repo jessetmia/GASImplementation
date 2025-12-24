@@ -16,56 +16,56 @@ class GASIMPLEMENTATION_API ABasePlayerController : public APlayerController
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category="BUDS|Input|Contexts")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Contexts")
 	TArray<TObjectPtr<UInputMappingContext>> InputContexts;
 	
-	UPROPERTY(EditDefaultsOnly, Category="BUDS|Input|Contexts")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Contexts")
 	TObjectPtr<UInputMappingContext> ControllerContext;
 	
-	UPROPERTY(EditDefaultsOnly, Category="BUDS|Input|Contexts")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Contexts")
 	TObjectPtr<UInputMappingContext> AbilitiesContext;
 
-	UPROPERTY(EditDefaultsOnly, Category="BUDS|Input|Movement Mappings")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Movement Mappings")
 	TObjectPtr<UInputAction> JumpAction;
 	
-	UPROPERTY(EditDefaultsOnly, Category="BUDS|Input|Movement Mappings")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Movement Mappings")
 	TObjectPtr<UInputAction> CrouchAction;
 	
-	UPROPERTY(EditDefaultsOnly, Category="BUDS|Input|Movement Mappings")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Movement Mappings")
 	TObjectPtr<UInputAction> SprintAction;
 	
-	UPROPERTY(EditDefaultsOnly, Category="BUDS|Input|Movement Mappings")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Movement Mappings")
 	TObjectPtr<UInputAction> LookAction;
 	
-	UPROPERTY(EditDefaultsOnly, Category="BUDS|Input|Movement Mappings")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Movement Mappings")
 	TObjectPtr<UInputAction> MoveAction;
 
-	UPROPERTY(EditDefaultsOnly, Category="BUDS|Input|Movement Mappings")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Movement Mappings")
 	TObjectPtr<UInputAction> AdjustCameraAction;
 
-	UPROPERTY(EditDefaultsOnly, Category="BUDS|Input|Ability Mappings")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Ability Mappings")
 	TObjectPtr<UInputAction> ConfirmTargetAction;
 
-	UPROPERTY(EditDefaultsOnly, Category="BUDS|Input|Ability Mappings")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Ability Mappings")
 	TObjectPtr<UInputAction> CancelTargetAction;
 	
-	UPROPERTY(EditDefaultsOnly, Category="BUDS|Input|Ability Mappings")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Ability Mappings")
 	TObjectPtr<UInputAction> PrimaryAction;
 
-	void Jump();
-	void StopJump();
-	void SprintPressed();
-	void SprintReleased();
-	void CrouchPressed();
-	void CrouchReleased();
-	void Move(const FInputActionValue& Value);
-	void Look(const FInputActionValue& Value);
-	void ConfirmTarget();
-	void CancelTarget();
-	void ActivateAbility(const FGameplayTag& AbilityTag) const;
-	void CancelAbility(const FGameplayTag& AbilityTag) const;
-	void ActivatePrimaryAbility();
-	void AdjustCamera(const FInputActionValue& Value);
+	virtual void Jump();
+	virtual void StopJump();
+	virtual void SprintPressed();
+	virtual void SprintReleased();
+	virtual void CrouchPressed();
+	virtual void CrouchReleased();
+	virtual void Move(const FInputActionValue& Value);
+	virtual void Look(const FInputActionValue& Value);
+	virtual void ConfirmTarget();
+	virtual void CancelTarget();
+	virtual void ActivateAbility(const FGameplayTag& AbilityTag) const;
+	virtual void CancelAbility(const FGameplayTag& AbilityTag) const;
+	virtual void ActivatePrimaryAbility();
+	virtual void AdjustCamera(const FInputActionValue& Value);
 	
 	virtual void SetupInputComponent() override;
 

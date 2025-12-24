@@ -47,16 +47,14 @@ void ABaseCharacter::GiveStartupAbilities()
 	for (const TSubclassOf<UGameplayAbility>& Ability: StartupAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability);
+		DebugHelper::Print(*GetName(), FString::Printf(TEXT("Giving ability: %s"), *Ability->GetName()), FColor::Green, -1, true);
 		GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
 	}
 }
 
 void ABaseCharacter::InitializeAttributes() const
 {
-	ApplyEffectToSelf(InitializeBaseAttributesEffect);
-	ApplyEffectToSelf(InitializeDerivedAttributesEffect);
-	ApplyEffectToSelf(InitializeSecondaryAttributesEffect);
-	ApplyEffectToSelf(InitializeResourceAttributesEffect);
+	if (IsValid(InitializeBaseAttributesEffect)) ApplyEffectToSelf(InitializeBaseAttributesEffect);
 }
 
 void ABaseCharacter::ApplyStartupEffects() const

@@ -16,23 +16,34 @@ class GASIMPLEMENTATION_API ABasePlayerCharacter : public ABaseCharacter
 
 public:
 	explicit ABasePlayerCharacter(const FObjectInitializer& ObjectInitializer);
+	
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual TObjectPtr<UBaseAttributeSet> GetAttributeSet() const override;
+
+	
+	FORCEINLINE float GetArmLength() const { return ArmLength; }
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	
+	void AdjustCamera(float CameraLength);
 
 protected:
-	UPROPERTY(VisibleAnywhere, Category="Camera", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, Category="GAS|Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> SpringArmComponent;
 	
-	UPROPERTY(VisibleAnywhere, Category="Camera", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, Category="GAS|Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCameraComponent> FollowCamera;
 
-	UPROPERTY(VisibleAnywhere, Category="Camera", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, Category="GAS|Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCameraComponent> FirstPersonCamera;
 
-	UPROPERTY(EditDefaultsOnly, Category="Camera")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Camera")
 	float ArmLength = 300.f;
 
-	UPROPERTY(EditDefaultsOnly, Category="Camera")
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Camera")
 	FVector CameraSocketOffset = FVector(0.f, 35.f, 35.f);
 	
 	virtual void InitializeCharacterMovement() override;
 	void SetupCameraComponents();
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
 };

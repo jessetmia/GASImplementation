@@ -20,6 +20,7 @@ class GASIMPLEMENTATION_API ABaseCharacter : public ACharacter, public IAbilityS
 public:
 	explicit ABaseCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	//Used to pass ASC and Attribute Set to UI and other elements easily
 	UPROPERTY(BluePrintAssignable)
 	FASCInitialize OnASCInitialized;
 	
@@ -37,15 +38,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="GAS|Effects")
 	TSubclassOf<UGameplayEffect> InitializeBaseAttributesEffect;
-
-	UPROPERTY(EditDefaultsOnly, Category="GAS|Effects")
-	TSubclassOf<UGameplayEffect> InitializeDerivedAttributesEffect;
-
-	UPROPERTY(EditDefaultsOnly, Category="GAS|Effects")
-	TSubclassOf<UGameplayEffect> InitializeSecondaryAttributesEffect;
-
-	UPROPERTY(EditDefaultsOnly, Category="GAS|Effects")
-	TSubclassOf<UGameplayEffect> InitializeResourceAttributesEffect;
 	
 	virtual void InitializeCharacterMovement();
 	virtual void GiveStartupAbilities();

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AttributeSet.h"
 #include "UObject/Object.h"
 #include "BaseDelegates.generated.h"
 
