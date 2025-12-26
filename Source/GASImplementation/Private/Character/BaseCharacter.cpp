@@ -5,7 +5,7 @@
 
 #include "AbilitySystem/BaseAttributeSet.h"
 #include "GameFramework/PlayerState.h"
-#include "Movement/BaseCharacterMovementComponent.h"
+#include "Character/Movement/BaseCharacterMovementComponent.h"
 #include "Utils/DebugHelper.h"
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)

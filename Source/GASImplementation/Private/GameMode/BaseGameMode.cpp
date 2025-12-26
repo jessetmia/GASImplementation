@@ -3,7 +3,13 @@
 
 #include "GameMode/BaseGameMode.h"
 
+#include "Character/BaseCharacter.h"
+#include "Player/BasePlayerController.h"
+#include "Player/BasePlayerState.h"
+
 ABaseGameMode::ABaseGameMode()
 {
-	// stub
+	PlayerStateClass = ABasePlayerState::StaticClass();
+	PlayerControllerClass = ABasePlayerController::StaticClass();
+	DefaultPawnClass = ABaseCharacter::StaticClass();
 }

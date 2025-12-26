@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BaseCharacterMovementComponent.h"
+#include "Character/Movement/BaseCharacterMovementComponent.h"
 #include "Character/BaseCharacter.h"
 
 float UBaseCharacterMovementComponent::GetMaxSpeed() const

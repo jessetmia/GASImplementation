@@ -8,7 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/PlayerState.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Movement/BaseCharacterMovementComponent.h"
+#include "Character/Movement/BaseCharacterMovementComponent.h"
 #include "Player/BasePlayerState.h"
 
 
