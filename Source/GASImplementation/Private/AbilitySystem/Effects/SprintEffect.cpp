@@ -18,13 +18,23 @@ USprintEffect::USprintEffect()
 	TargetReqsComponent->OngoingTagRequirements = AppRequirements;
 	
 	GEComponents.Add(TargetReqsComponent);
+}
+
+USprintSpeedEffect::USprintSpeedEffect()
+{
 	
 	FGameplayModifierInfo MovementSpeedModifier;
 	MovementSpeedModifier.Attribute = UBaseAttributeSet::GetMovementSpeedAttribute();
 	MovementSpeedModifier.ModifierOp = EGameplayModOp::Multiplicitive;
 	MovementSpeedModifier.ModifierMagnitude = FScalableFloat(1.5f);
 	Modifiers.Add(MovementSpeedModifier);
+}
 
+USprintStaminaDrainEffect::USprintStaminaDrainEffect()
+{
+	Period = 1.f;
+	bExecutePeriodicEffectOnApplication = true;
+	
 	FGameplayModifierInfo StaminaReductionModifier;
 	StaminaReductionModifier.Attribute = UBaseAttributeSet::GetStaminaAttribute();
 	StaminaReductionModifier.ModifierOp = EGameplayModOp::Additive;

@@ -19,4 +19,8 @@ namespace BaseTags
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Crouch);
 		}
 	}
+	namespace State
+	{
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(Exhausted);
+	}
 }

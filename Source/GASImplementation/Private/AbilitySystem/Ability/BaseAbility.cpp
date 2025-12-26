@@ -101,9 +101,24 @@ void UBaseAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	ApplyActiveEffects();
+
 	if (bDrawDebugMessages)
 	{
 		DebugHelper::Print(*GetName(), TEXT("Activated Ability"), FColor::Green, -1, true);
+	}
+}
+
+void UBaseAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+{
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+	RemoveActiveEffects();
+
+	if (bDrawDebugMessages)
+	{
+		DebugHelper::Print(*GetName(), TEXT("Ended Ability"), FColor::Green, -1, true);
 	}
 }
 
@@ -117,4 +132,45 @@ void UBaseAbility::SetTagData(const FGameplayTagContainer& Tags)
 {
 	SetAssetTags(Tags);
 	ActivationOwnedTags.AppendTags(Tags);
+}
+
+void UBaseAbility::ApplyActiveEffects()
+{
+	if (AppliedEffects.IsEmpty()) return;
+
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
+	if (!ASC) return;
+
+	FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
+	EffectContext.AddSourceObject(this);
+
+	for (const TSubclassOf<UGameplayEffect>& GameplayEffectClass : AppliedEffects)
+	{
+		if (!GameplayEffectClass) continue;
+
+		const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(GameplayEffectClass, GetAbilityLevel(), EffectContext);
+		if (SpecHandle.IsValid())
+		{
+			FActiveGameplayEffectHandle Handle = ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+			AppliedEffectHandles.Add(Handle);
+		}
+	}
+}
+
+void UBaseAbility::RemoveActiveEffects()
+{
+	if (AppliedEffectHandles.IsEmpty()) return;
+
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
+	if (!ASC) return;
+
+	for (FActiveGameplayEffectHandle& Handle : AppliedEffectHandles)
+	{
+		if (Handle.IsValid())
+		{
+			ASC->RemoveActiveGameplayEffect(Handle);
+		}
+	}
+
+	AppliedEffectHandles.Empty();
 }

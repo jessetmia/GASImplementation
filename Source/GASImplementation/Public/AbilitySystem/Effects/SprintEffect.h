@@ -17,3 +17,27 @@ class GASIMPLEMENTATION_API USprintEffect : public UGameplayEffect
 public:
 	USprintEffect();
 };
+
+/**
+ * Sprint Speed Buff - Infinite, non-periodic effect that increases movement speed
+ */
+UCLASS()
+class GASIMPLEMENTATION_API USprintSpeedEffect : public USprintEffect
+{
+	GENERATED_BODY()
+
+public:
+	USprintSpeedEffect();
+};
+
+/**
+ * Sprint Stamina Drain - Infinite, periodic effect that drains stamina over time
+ */
+UCLASS()
+class GASIMPLEMENTATION_API USprintStaminaDrainEffect : public USprintEffect
+{
+	GENERATED_BODY()
+
+public:
+	USprintStaminaDrainEffect();
+};

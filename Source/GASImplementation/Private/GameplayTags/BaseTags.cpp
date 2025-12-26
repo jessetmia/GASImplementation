@@ -15,4 +15,8 @@ namespace BaseTags
 			UE_DEFINE_GAMEPLAY_TAG_COMMENT(Crouch, "BaseTags.Abilities.Movement.Crouch", "Crouch Ability Tag");
 		}
 	}
+	namespace State
+	{
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Exhausted, "BaseTags.State.Exhausted", "Exhausted State Tag");
+	}
 }

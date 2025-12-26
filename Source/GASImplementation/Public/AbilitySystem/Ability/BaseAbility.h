@@ -38,6 +38,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="GAS|Abilities|Damage")
 	TArray<FGameplayTag> AbilityDynamicTags;
+
+	UPROPERTY(EditDefaultsOnly, Category = "GAS|Effects")
+	TArray<TSubclassOf<UGameplayEffect>> AppliedEffects;
+	
+	UPROPERTY()
+	TArray<FActiveGameplayEffectHandle> AppliedEffectHandles;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "GAS|Abilities|Damage")
 	float BaseEffectValue = 10.0f;
@@ -45,7 +51,12 @@ protected:
 	virtual FGameplayEffectSpecHandle CreateSpecHandle(UBaseAbilitySystemComponent* AbilitySystemComponent) const;
 	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+	
 	virtual void SetTagData(const FGameplayTag& Tag);
 	virtual void SetTagData(const FGameplayTagContainer& Tags);
+
+	virtual void ApplyActiveEffects();
+
+	virtual void RemoveActiveEffects();
 };

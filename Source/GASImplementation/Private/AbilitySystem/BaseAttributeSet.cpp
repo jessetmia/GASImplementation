@@ -2,8 +2,14 @@
 
 
 #include "AbilitySystem/BaseAttributeSet.h"
+#include "AbilitySystem/Effects/ExhaustedEffect.h"
 #include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
+
+UBaseAttributeSet::UBaseAttributeSet()
+{
+	ExhaustedEffect = UExhaustedEffect::StaticClass();
+}
 
 void UBaseAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -35,6 +41,21 @@ void UBaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
 	{
 		SetStamina(FMath::Clamp(GetStamina(), 0.0f, GetMaxStamina()));
+
+		if (GetStamina() <= 0.f && ExhaustedEffect)
+		{
+			if (UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent())
+			{
+				FGameplayEffectContextHandle Context = ASC->MakeEffectContext();
+				Context.AddSourceObject(GetOwningActor());
+                
+				const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(ExhaustedEffect, 1.f, Context);
+				if (SpecHandle.IsValid())
+				{
+					ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+				}
+			}
+		}
 		return;
 	}
 }

@@ -15,13 +15,16 @@ GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 
+class UExhaustedEffect;
+
 UCLASS()
 class GASIMPLEMENTATION_API UBaseAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
 
 public:
-
+	UBaseAttributeSet();
+	
 	UPROPERTY(BlueprintAssignable)
 	FAttrbutesInitialized OnAttrbutesInitialized;
 
@@ -54,5 +57,8 @@ public:
 	void OnRep_MovementSpeed(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_AttributesInitialized(bool bWasInitialized);
-	
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "GAS|Effects")
+	TSubclassOf<UGameplayEffect> ExhaustedEffect;
 };
