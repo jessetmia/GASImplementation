@@ -94,7 +94,6 @@ void ABaseCharacter::ApplyStartupEffects() const
 		if (const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(EffectClass, 1.f, ContextHandle); SpecHandle.IsValid())
 		{
 			AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-			DebugHelper::Print(*GetName(), TEXT("Applied passive effect: ") + EffectClass->GetName(), FColor::Green, -1, true);
 		}
 		else
 		{

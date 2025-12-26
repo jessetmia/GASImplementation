@@ -14,6 +14,11 @@ namespace BaseTags
 			UE_DEFINE_GAMEPLAY_TAG_COMMENT(Sprint, "BaseTags.Abilities.Movement.Sprint", "Sprint Ability Tag");
 			UE_DEFINE_GAMEPLAY_TAG_COMMENT(Crouch, "BaseTags.Abilities.Movement.Crouch", "Crouch Ability Tag");
 		}
+
+		namespace CrowdControl
+		{
+			UE_DEFINE_GAMEPLAY_TAG_COMMENT(Stunned, "BaseTags.Abilities.CrowdControl.Stunned", "Stunned Ability Tag");
+		}
 	}
 	namespace State
 	{

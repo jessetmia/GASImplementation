@@ -43,7 +43,7 @@ protected:
 	FVector CameraSocketOffset = FVector(0.f, 35.f, 35.f);
 	
 	virtual void InitializeCharacterMovement() override;
-	void SetupCameraComponents();
+	virtual void SetupCameraComponents();
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
 };
