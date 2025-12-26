@@ -6,14 +6,15 @@
 #include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerState.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Movement/BaseCharacterMovementComponent.h"
 #include "Player/BasePlayerState.h"
 
 
 // Sets default values
 ABasePlayerCharacter::ABasePlayerCharacter(const FObjectInitializer& ObjectInitializer)
+    : Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
 

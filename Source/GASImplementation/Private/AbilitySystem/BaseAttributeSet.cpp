@@ -2,7 +2,7 @@
 
 
 #include "AbilitySystem/BaseAttributeSet.h"
-
+#include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
 
 void UBaseAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -19,6 +19,24 @@ void UBaseAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 void UBaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
+	
+	if (Data.EvaluatedData.Attribute == GetMovementSpeedAttribute())
+	{
+		SetMovementSpeed(FMath::Clamp(GetMovementSpeed(), 0.0f, 1500.0f));
+		return;
+	}
+	
+	if (Data.EvaluatedData.Attribute == GetMaxStaminaAttribute())
+	{
+		SetStamina(FMath::Min(GetStamina(), GetMaxStamina()));
+		return;
+	}
+    
+	if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
+	{
+		SetStamina(FMath::Clamp(GetStamina(), 0.0f, GetMaxStamina()));
+		return;
+	}
 }
 
 void UBaseAttributeSet::OnRep_Stamina(const FGameplayAttributeData& OldValue)

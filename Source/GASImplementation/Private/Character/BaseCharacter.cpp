@@ -4,11 +4,12 @@
 #include "Character/BaseCharacter.h"
 
 #include "AbilitySystem/BaseAttributeSet.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerState.h"
+#include "Movement/BaseCharacterMovementComponent.h"
 #include "Utils/DebugHelper.h"
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UBaseCharacterMovementComponent>(CharacterMovementComponentName))
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -17,24 +18,32 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 }
 
+UBaseCharacterMovementComponent* ABaseCharacter::GetCharacterMovement() const
+{
+	return Cast<UBaseCharacterMovementComponent>(Super::GetCharacterMovement());
+}
+
 void ABaseCharacter::InitializeCharacterMovement()
 {
 	float MaxWalkSpeed = 500.f;
 	
 	if (const TObjectPtr<UBaseAttributeSet> AttributeSet = Cast<UBaseAttributeSet>(GetAttributeSet()))
 	{
-		if (!IsValid(AttributeSet)) return;
-		if (AttributeSet->MovementSpeed.GetCurrentValue() <= 0.f) return;
+		if (IsValid(AttributeSet))
+		{
+			if (AttributeSet->MovementSpeed.GetCurrentValue() <= 0.f) return;
+			MaxWalkSpeed = AttributeSet->MovementSpeed.GetCurrentValue();
+		}
 		
-		DebugHelper::Print(*GetName(), FString::Printf(TEXT("Movement speed: %f"), AttributeSet->MovementSpeed.GetCurrentValue()), FColor::Green, -1, true);
-		UE_LOG(LogTemp, Log, TEXT("%s: Movement speed: %f"), *GetName(), AttributeSet->MovementSpeed.GetCurrentValue());
-		MaxWalkSpeed = AttributeSet->MovementSpeed.GetCurrentValue();
+		GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(
+			AttributeSet->GetMovementSpeedAttribute()
+		).AddUObject(this, &ThisClass::OnMovementSpeedChanged);
 	}
 	
+	GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
 	GetCharacterMovement()->JumpZVelocity = 500.f;
 	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
@@ -94,10 +103,10 @@ void ABaseCharacter::ApplyStartupEffects() const
 	}
 }
 
-void ABaseCharacter::ResetAttributesAndReApplyStartupEffects() const
+void ABaseCharacter::OnMovementSpeedChanged(const FOnAttributeChangeData& OnAttributeChangeData)
 {
-	InitializeAttributes();
-	ApplyStartupEffects();
+	if (!IsValid(GetCharacterMovement())) return;
+	GetCharacterMovement()->MaxWalkSpeed = OnAttributeChangeData.NewValue;
 }
 
 void ABaseCharacter::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& Effect, const float Level) const
