@@ -26,6 +26,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="GAS|Abilities")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
-	UPROPERTY()
+	UPROPERTY(VisibleInstanceOnly, Category="GAS|Abilities")
 	TObjectPtr<UBaseAttributeSet> AttributeSet;
 };

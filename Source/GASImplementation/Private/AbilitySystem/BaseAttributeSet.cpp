@@ -4,6 +4,7 @@
 #include "AbilitySystem/BaseAttributeSet.h"
 #include "AbilitySystem/Effects/ExhaustedEffect.h"
 #include "GameplayEffectExtension.h"
+#include "GameplayTags/BaseTags.h"
 #include "Net/UnrealNetwork.h"
 
 UBaseAttributeSet::UBaseAttributeSet()
@@ -46,13 +47,16 @@ void UBaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		{
 			if (UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent())
 			{
-				FGameplayEffectContextHandle Context = ASC->MakeEffectContext();
-				Context.AddSourceObject(GetOwningActor());
-                
-				const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(ExhaustedEffect, 1.f, Context);
-				if (SpecHandle.IsValid())
+				if (!ASC->HasMatchingGameplayTag(BaseTags::State::Exhausted))
 				{
-					ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+					FGameplayEffectContextHandle Context = ASC->MakeEffectContext();
+					Context.AddSourceObject(GetOwningActor());
+	                
+					const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(ExhaustedEffect, 1.f, Context);
+					if (SpecHandle.IsValid())
+					{
+						ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+					}
 				}
 			}
 		}

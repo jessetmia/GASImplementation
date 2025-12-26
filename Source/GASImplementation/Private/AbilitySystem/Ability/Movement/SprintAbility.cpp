@@ -10,7 +10,5 @@
 USprintAbility::USprintAbility()
 {
 	SetTagData(BaseTags::Abilities::Movement::Sprint);
-	
-	BlockAbilitiesWithTag.AddTag(BaseTags::State::Exhausted);
-	CancelAbilitiesWithTag.AddTag(BaseTags::State::Exhausted);
+	ActivationBlockedTags.AddTag(BaseTags::State::Exhausted);
 }
