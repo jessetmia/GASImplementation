@@ -18,6 +18,11 @@ namespace BaseTags
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Sprint);
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Crouch);
 		}
+
+		namespace CrowdControl
+		{
+			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Stunned);
+		}
 	}
 	namespace State
 	{

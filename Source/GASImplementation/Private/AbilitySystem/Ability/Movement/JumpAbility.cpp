@@ -10,6 +10,8 @@
 UJumpAbility::UJumpAbility()
 {
 	SetTagData(BaseTags::Abilities::Movement::Jump);
+
+	ActivationBlockedTags.AddTag(BaseTags::Abilities::CrowdControl::Stunned);
 }
 
 void UJumpAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
