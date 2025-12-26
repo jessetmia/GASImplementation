@@ -114,11 +114,23 @@ For an example of GAS AttributeSets, we have included the following attributes:
 
 Base values can be modified by updating the InitializeBaseAttributes Effect.
 
+The following Blueprints are included:
+- BP_PlayerCharacter - This uses Manny as the mesh
+- BP_PlayerController
+- BP_TestGameMode
 
-## Play In Editor
+Input Actions are included for the following:
+- Jump
+- Sprint
+- Crouch
+- Look
+- Move
+
+## How to play
 
 All classes should be extendedable for Blueprints, but default values should be set to allow for immediate play by setting
-Gamemode to BaseGameMode in editor. Controls will need to be configured in the playercontroller. 
-This has been tested with first and 3rd person default projects in UE5.
+Gamemode to BP_TestGameMode in editor. This has been tested with first and 3rd person default projects in UE5.
+
+No animations are included in this plugin. The BP_PlayerCharacter uses the manny mesh, and unarmed ABP.
 
 

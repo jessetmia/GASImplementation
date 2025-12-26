@@ -23,7 +23,7 @@ public:
 	virtual TObjectPtr<UBaseAttributeSet> GetAttributeSet() const { return AttributeSet; }
 
 protected:
-	UPROPERTY(VisibleAnywhere, Category="GAS|Abilities")
+	UPROPERTY(VisibleInstanceOnly, Category="GAS|Abilities")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(VisibleInstanceOnly, Category="GAS|Abilities")
