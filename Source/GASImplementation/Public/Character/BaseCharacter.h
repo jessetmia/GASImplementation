@@ -48,8 +48,8 @@ protected:
 
 	virtual void InitializeCharacterMovement();
 	virtual void GiveStartupAbilities();
-	void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& Effect, const float Level = 1.f) const;
-	void InitializeAttributes() const;
-	void ApplyStartupEffects() const;
-	void OnMovementSpeedChanged(const FOnAttributeChangeData& OnAttributeChangeData);
+	virtual void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& Effect, const float Level = 1.f) const;
+	virtual void InitializeAttributes() const;
+	virtual void ApplyStartupEffects() const;
+	virtual void OnMovementSpeedChanged(const FOnAttributeChangeData& OnAttributeChangeData);
 };
