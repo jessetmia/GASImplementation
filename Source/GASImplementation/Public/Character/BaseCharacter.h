@@ -34,9 +34,12 @@ public:
 	FASCInitialize OnASCInitialized;
 	
 	FORCEINLINE virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return nullptr; }
-	FORCEINLINE virtual TObjectPtr<UBaseAttributeSet> GetAttributeSet() const { return nullptr;}
+	FORCEINLINE virtual UBaseAttributeSet* GetAttributeSet() const { return nullptr;}
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS|Debug")
+	bool bDrawDebugMessages = false;
+	
 	UPROPERTY(EditDefaultsOnly, Category="GAS|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 	
