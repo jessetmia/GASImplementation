@@ -17,7 +17,7 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	// Tick and refresh bone anims on dedicated server
 	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 }
-
+//region Startup Props
 UBaseCharacterMovementComponent* ABaseCharacter::GetCharacterMovement() const
 {
 	return Cast<UBaseCharacterMovementComponent>(Super::GetCharacterMovement());
@@ -51,19 +51,28 @@ void ABaseCharacter::InitializeCharacterMovement()
 
 void ABaseCharacter::GiveStartupAbilities()
 {
-	if (!IsValid(GetAbilitySystemComponent())) return;
+	if (!IsValid(GetAbilitySystemComponent()) || StartupAbilities.IsEmpty()) return;
 	
 	for (const TSubclassOf<UGameplayAbility>& Ability: StartupAbilities)
 	{
+		if (bDrawDebugMessages)
+		{
+			DebugHelper::Print(*GetName(), FString::Printf(TEXT("Giving ability: %s"), *Ability->GetName()), FColor::Green, -1, true);
+		}
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability);
-		DebugHelper::Print(*GetName(), FString::Printf(TEXT("Giving ability: %s"), *Ability->GetName()), FColor::Green, -1, true);
+		AbilitySpec.SourceObject = this;
+		// @TODO: Dynamically set ability level. Will require StartupAbilities refactor. Possibly DataTable? 
+		AbilitySpec.Level = 1;
 		GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
 	}
 }
 
 void ABaseCharacter::InitializeAttributes() const
 {
-	if (IsValid(InitializeBaseAttributesEffect)) ApplyEffectToSelf(InitializeBaseAttributesEffect);
+	if (IsValid(InitializeBaseAttributesEffect))
+	{
+		ApplyEffectToSelf(InitializeBaseAttributesEffect);
+	}
 }
 
 void ABaseCharacter::ApplyStartupEffects() const
@@ -101,6 +110,8 @@ void ABaseCharacter::ApplyStartupEffects() const
 		}
 	}
 }
+
+//endregion
 
 void ABaseCharacter::OnMovementSpeedChanged(const FOnAttributeChangeData& OnAttributeChangeData)
 {

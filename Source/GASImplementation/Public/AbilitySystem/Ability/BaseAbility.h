@@ -6,6 +6,13 @@
 #include "Abilities/GameplayAbility.h"
 #include "BaseAbility.generated.h"
 
+UENUM(BlueprintType)
+enum class EAbilityActivationPolicy : uint8
+{
+	OnGiven,
+	OnTriggered,
+};
+
 class UBaseAbilitySystemComponent;
 UCLASS()
 class GASIMPLEMENTATION_API UBaseAbility : public UGameplayAbility
@@ -25,6 +32,9 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "GAS|Abilities")
+	EAbilityActivationPolicy ActivationPolicy = EAbilityActivationPolicy::OnTriggered;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "GAS|Abilities")
 	TSubclassOf<UGameplayEffect> EffectClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "GAS|Abilities")
@@ -42,14 +52,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "GAS|Effects")
 	TArray<TSubclassOf<UGameplayEffect>> AppliedEffects;
 	
-	UPROPERTY()
-	TArray<FActiveGameplayEffectHandle> AppliedEffectHandles;
-	
 	UPROPERTY(EditDefaultsOnly, Category = "GAS|Abilities|Damage")
 	float BaseEffectValue = 10.0f;
+	
+	UPROPERTY()
+	TArray<FActiveGameplayEffectHandle> AppliedEffectHandles;
 
 	virtual FGameplayEffectSpecHandle CreateSpecHandle(UBaseAbilitySystemComponent* AbilitySystemComponent) const;
-	
+
+	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	

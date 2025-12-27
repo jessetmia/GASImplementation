@@ -37,6 +37,9 @@ public:
 	FORCEINLINE virtual UBaseAttributeSet* GetAttributeSet() const { return nullptr;}
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS|Debug")
+	bool bDrawDebugMessages = false;
+	
 	UPROPERTY(EditDefaultsOnly, Category="GAS|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 	
