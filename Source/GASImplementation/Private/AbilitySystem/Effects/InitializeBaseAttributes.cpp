@@ -27,6 +27,6 @@ UInitializeBaseAttributes::UInitializeBaseAttributes()
 	FGameplayModifierInfo MovementSpeedModifier;
 	MovementSpeedModifier.Attribute = UBaseAttributeSet::GetMovementSpeedAttribute();
 	MovementSpeedModifier.ModifierOp = EGameplayModOp::Override;
-	MovementSpeedModifier.ModifierMagnitude = FScalableFloat(600.0f);
+	MovementSpeedModifier.ModifierMagnitude = FScalableFloat(500.0f);
 	Modifiers.Add(MovementSpeedModifier);
 }

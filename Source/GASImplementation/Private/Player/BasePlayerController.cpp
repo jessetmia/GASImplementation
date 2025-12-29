@@ -8,6 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "Character/BasePlayerCharacter.h"
 #include "GameFramework/Character.h"
 #include "GameplayTags/BaseTags.h"
@@ -46,6 +47,7 @@ void ABasePlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Completed, this, &ThisClass::CrouchReleased);
 	EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Canceled, this, &ThisClass::CrouchReleased);
 	EnhancedInputComponent->BindAction(PrimaryAction, ETriggerEvent::Triggered, this, &ThisClass::ActivatePrimaryAbility);
+	EnhancedInputComponent->BindAction(CombatStanceAction, ETriggerEvent::Started, this, &ThisClass::ToggleCombatStance);
 }
 
 void ABasePlayerController::SetUIInputMode()
@@ -186,4 +188,18 @@ void ABasePlayerController::AdjustCamera(const FInputActionValue& Value)
 	float ArmLength = PlayerCharacter->GetArmLength();
 	ArmLength= FMath::Clamp(ArmLength + (Value.Get<float>() * 10.0), 200.f, 500.f);
 	PlayerCharacter->AdjustCamera(ArmLength);
+}
+
+void ABasePlayerController::ToggleCombatStance()
+{
+	const UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn());
+	if (!IsValid(ASC)) return;
+	
+	if (!ASC->HasMatchingGameplayTag(BaseTags::Abilities::Categories::CombatStance))
+	{
+		ActivateAbility(BaseTags::Abilities::Categories::CombatStance);
+	} else
+	{
+		CancelAbility(BaseTags::Abilities::Categories::CombatStance);
+	}
 }

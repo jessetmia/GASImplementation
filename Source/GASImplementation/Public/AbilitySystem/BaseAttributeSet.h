@@ -56,7 +56,7 @@ public:
 	UFUNCTION()
 	void OnRep_MovementSpeed(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
-	void OnRep_AttributesInitialized(bool bWasInitialized);
+	void OnRep_AttributesInitialized();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "GAS|Effects")

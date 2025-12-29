@@ -6,6 +6,8 @@
 #include "Abilities/GameplayAbility.h"
 #include "BaseAbility.generated.h"
 
+class UBaseCombatComponent;
+
 UENUM(BlueprintType)
 enum class EAbilityActivationPolicy : uint8
 {
@@ -57,6 +59,12 @@ protected:
 	
 	UPROPERTY()
 	TArray<FActiveGameplayEffectHandle> AppliedEffectHandles;
+	
+	UPROPERTY()
+	TObjectPtr<UBaseCombatComponent> CombatComponent;
+
+	UFUNCTION(BlueprintCallable, Category="GAS|Abilities|Item")
+	virtual UBaseCombatComponent* GetCombatComponent(); 
 
 	virtual FGameplayEffectSpecHandle CreateSpecHandle(UBaseAbilitySystemComponent* AbilitySystemComponent) const;
 

@@ -37,7 +37,7 @@ public class GASImplementation : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",	
+				"SlateCore", "AnimGraphRuntime",	
 			}
 		);
 		

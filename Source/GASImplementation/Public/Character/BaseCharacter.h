@@ -13,6 +13,7 @@ class UBaseAttributeSet;
 class UBaseCharacterMovementComponent;
 class UGameplayEffect;
 class UGameplayAbility;
+class UBaseCombatComponent;
 
 UCLASS(Abstract)
 class GASIMPLEMENTATION_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -35,8 +36,12 @@ public:
 	
 	FORCEINLINE virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return nullptr; }
 	FORCEINLINE virtual UBaseAttributeSet* GetAttributeSet() const { return nullptr;}
+	FORCEINLINE UBaseCombatComponent* GetCombatComponent() const { return CombatComponent; }
 
 protected:
+	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
+	TObjectPtr<UBaseCombatComponent> CombatComponent;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS|Debug")
 	bool bDrawDebugMessages = false;
 	

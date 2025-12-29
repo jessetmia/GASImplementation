@@ -9,6 +9,10 @@
 class UCameraComponent;
 class USpringArmComponent;
 
+/**
+ * This is an example class to demonstrate how the player character class may look.
+ * Extend out BaseCharacter to make changes then create a new PlayerCharacter from your new class.
+ **/
 UCLASS()
 class GASIMPLEMENTATION_API ABasePlayerCharacter : public ABaseCharacter
 {

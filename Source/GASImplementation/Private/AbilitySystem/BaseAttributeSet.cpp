@@ -16,8 +16,7 @@ void UBaseAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ThisClass, bAttributesInitialized);
-	
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, bAttributesInitialized, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Stamina, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxStamina, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MovementSpeed, COND_None, REPNOTIFY_Always);
@@ -79,7 +78,7 @@ void UBaseAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeData& OldVal
 	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, MovementSpeed, OldValue);
 }
 
-void UBaseAttributeSet::OnRep_AttributesInitialized(bool bWasInitialized)
+void UBaseAttributeSet::OnRep_AttributesInitialized()
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, bAttributesInitialized, bWasInitialized);
+	if (bAttributesInitialized) OnAttrbutesInitialized.Broadcast();
 }

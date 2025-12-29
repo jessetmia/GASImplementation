@@ -4,8 +4,9 @@
 #include "Character/BaseCharacter.h"
 
 #include "AbilitySystem/BaseAttributeSet.h"
-#include "GameFramework/PlayerState.h"
 #include "Character/Movement/BaseCharacterMovementComponent.h"
+#include "Component/BaseCombatComponent.h"
+#include "GameFramework/PlayerState.h"
 #include "Utils/DebugHelper.h"
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -14,10 +15,13 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
+	CombatComponent = CreateDefaultSubobject<UBaseCombatComponent>(TEXT("CombatComponent"));
+
 	// Tick and refresh bone anims on dedicated server
 	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 }
-//region Startup Props
+
+#pragma region Initialization
 UBaseCharacterMovementComponent* ABaseCharacter::GetCharacterMovement() const
 {
 	return Cast<UBaseCharacterMovementComponent>(Super::GetCharacterMovement());
@@ -111,7 +115,7 @@ void ABaseCharacter::ApplyStartupEffects() const
 	}
 }
 
-//endregion
+#pragma endregion
 
 void ABaseCharacter::OnMovementSpeedChanged(const FOnAttributeChangeData& OnAttributeChangeData)
 {

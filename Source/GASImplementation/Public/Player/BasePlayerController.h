@@ -51,6 +51,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Ability Mappings")
 	TObjectPtr<UInputAction> PrimaryAction;
+	
+	UPROPERTY(EditDefaultsOnly, Category="GAS|Input|Ability Mappings")
+	TObjectPtr<UInputAction> CombatStanceAction;
 
 	virtual void Jump();
 	virtual void StopJump();
@@ -66,6 +69,7 @@ protected:
 	virtual void CancelAbility(const FGameplayTag& AbilityTag) const;
 	virtual void ActivatePrimaryAbility();
 	virtual void AdjustCamera(const FInputActionValue& Value);
+	virtual void ToggleCombatStance();
 	
 	virtual void SetupInputComponent() override;
 

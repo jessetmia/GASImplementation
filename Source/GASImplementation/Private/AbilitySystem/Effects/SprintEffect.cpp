@@ -22,7 +22,6 @@ USprintEffect::USprintEffect()
 
 USprintSpeedEffect::USprintSpeedEffect()
 {
-	
 	FGameplayModifierInfo MovementSpeedModifier;
 	MovementSpeedModifier.Attribute = UBaseAttributeSet::GetMovementSpeedAttribute();
 	MovementSpeedModifier.ModifierOp = EGameplayModOp::Multiplicitive;

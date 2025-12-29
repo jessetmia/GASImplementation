@@ -7,6 +7,7 @@
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "Character/BaseCharacter.h"
 #include "Character/BasePlayerCharacter.h"
+#include "Component/BaseCombatComponent.h"
 #include "Utils/DebugHelper.h"
 
 UBaseAbility::UBaseAbility()
@@ -14,6 +15,48 @@ UBaseAbility::UBaseAbility()
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }
 
+#pragma region Ability Overrides
+void UBaseAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+{
+	Super::OnGiveAbility(ActorInfo, Spec);
+
+	if (ActivationPolicy == EAbilityActivationPolicy::OnGiven)
+	{
+		if (ActorInfo && !Spec.IsActive())
+		{
+			ActorInfo->AbilitySystemComponent->TryActivateAbility(Spec.Handle);
+		}
+	}
+}
+
+void UBaseAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+								   const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	ApplyActiveEffects();
+
+	if (bDrawDebugMessages)
+	{
+		DebugHelper::Print(*GetName(), TEXT("Activated Ability"), FColor::Green, -1, true);
+	}
+}
+
+void UBaseAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+{
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+	RemoveActiveEffects();
+
+	if (bDrawDebugMessages)
+	{
+		DebugHelper::Print(*GetName(), TEXT("Ended Ability"), FColor::Green, -1, true);
+	}
+}
+#pragma endregion
+
+#pragma region Ability Helpers
 void UBaseAbility::ApplyEffect(const FGameplayEventData& EventData)
 {
 	if (!EventData.Instigator || !EventData.Target)
@@ -94,44 +137,6 @@ FGameplayEffectSpecHandle UBaseAbility::CreateSpecHandle(
 	return SpecHandle;
 }
 
-void UBaseAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
-{
-	Super::OnGiveAbility(ActorInfo, Spec);
-
-	if (ActivationPolicy == EAbilityActivationPolicy::OnGiven)
-	{
-		if (ActorInfo && !Spec.IsActive())
-		{
-			ActorInfo->AbilitySystemComponent->TryActivateAbility(Spec.Handle);
-		}
-	}
-}
-
-void UBaseAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-                                   const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
-{
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	ApplyActiveEffects();
-
-	if (bDrawDebugMessages)
-	{
-		DebugHelper::Print(*GetName(), TEXT("Activated Ability"), FColor::Green, -1, true);
-	}
-}
-
-void UBaseAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
-{
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-
-	RemoveActiveEffects();
-
-	if (bDrawDebugMessages)
-	{
-		DebugHelper::Print(*GetName(), TEXT("Ended Ability"), FColor::Green, -1, true);
-	}
-}
 
 void UBaseAbility::SetTagData(const FGameplayTag& Tag)
 {
@@ -184,4 +189,13 @@ void UBaseAbility::RemoveActiveEffects()
 	}
 
 	AppliedEffectHandles.Empty();
+}
+#pragma endregion
+
+UBaseCombatComponent* UBaseAbility::GetCombatComponent()
+{
+	CombatComponent  = GetAvatarActorFromActorInfo()->FindComponentByClass<UBaseCombatComponent>();
+	if (CombatComponent) return CombatComponent;
+
+	return nullptr;
 }
