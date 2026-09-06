@@ -20,24 +20,32 @@ float UBaseCharacterMovementComponent::CalculateMaxRunSpeed() const
 
 	if (!IsValid(Char)) return MaxWalkSpeed;
 
-	if (MovementMode != MOVE_Walking  && MovementMode != MOVE_NavWalking) return Super::GetMaxSpeed();
+	if (MovementMode != MOVE_Walking  && MovementMode != MOVE_NavWalking) return MaxWalkSpeed;
+	
+	float GASWalkSpeed = MaxWalkSpeed;
+	
+	const UAbilitySystemComponent* ASC = Char->GetAbilitySystemComponent();
+	if (ASC)
+	{
+		GASWalkSpeed = ASC->GetNumericAttribute(UBaseAttributeSet::GetMovementSpeedAttribute());
+	}
 
 	const FVector CurrentAcceleration = Acceleration;
     
-	if (CurrentAcceleration.IsNearlyZero()) return MaxWalkSpeed;
+	if (CurrentAcceleration.IsNearlyZero()) return GASWalkSpeed;
 
 	const FVector ActorForward = Char->GetActorForwardVector();
 
 	const FVector MovementDirection = CurrentAcceleration.GetSafeNormal();
 	const float DotProduct = FVector::DotProduct(MovementDirection, ActorForward);
 
-	if (DotProduct < 0.0f) return MaxWalkSpeed * BackwardSpeedMultiplier;
+	if (DotProduct < -0.2f) return GASWalkSpeed * BackwardSpeedMultiplier;
 
 	const float AbsDot = FMath::Abs(DotProduct);
 	if (AbsDot < DiagonalThreshold) // Mostly sideways
 	{
-		return MaxWalkSpeed * StrafeSpeedMultiplier; // Slower than forward, faster than backward
+		return GASWalkSpeed * StrafeSpeedMultiplier; // Slower than forward, faster than backward
 	}
 	
-	return MaxWalkSpeed;
+	return GASWalkSpeed;
 }
