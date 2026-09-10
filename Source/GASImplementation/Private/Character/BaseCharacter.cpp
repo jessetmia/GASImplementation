@@ -4,9 +4,11 @@
 #include "Character/BaseCharacter.h"
 
 #include "AbilitySystem/BaseAttributeSet.h"
+#include "AnimInstance/LinkedAnimLayer.h"
 #include "Character/Movement/BaseCharacterMovementComponent.h"
 #include "Component/BaseCombatComponent.h"
 #include "GameFramework/PlayerState.h"
+#include "Structs/BaseStructTypes.h"
 #include "Utils/DebugHelper.h"
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -123,15 +125,52 @@ void ABaseCharacter::OnMovementSpeedChanged(const FOnAttributeChangeData& OnAttr
 	GetCharacterMovement()->MaxWalkSpeed = OnAttributeChangeData.NewValue;
 }
 
+void ABaseCharacter::OnAnimStateTagChanged(const FGameplayTag Tag, const int32 NewCount)
+{
+	if (NewCount <= 0) return;
+	
+	if (bDrawDebugMessages)
+	{
+		DebugHelper::Print(*GetName(), FString::Printf(TEXT("Anim State Tag Changed: %s"), *Tag.ToString()), FColor::Green, -1, true);
+	}
+
+	TSubclassOf<UAnimInstance> DesiredLayer = nullptr;
+
+	for (const auto& [ActivationTag, AnimLayerClass] : CombatAnimLayers)
+	{
+		if (GetAbilitySystemComponent()->HasMatchingGameplayTag(ActivationTag))
+		{
+			DesiredLayer = AnimLayerClass;
+			break;
+		}
+	}
+
+	if (!DesiredLayer || DesiredLayer == ActiveAnimLayer) return;
+	
+	USkeletalMeshComponent* SkeletalMeshComponent = GetMesh();
+	if (!SkeletalMeshComponent) return;
+	
+	if (bDrawDebugMessages)
+	{
+		DebugHelper::Print(*GetName(), FString::Printf(TEXT("Linked Anim Layer: %s"), *DesiredLayer->GetName()), FColor::Green, -1, true);
+	}
+
+	if (ActiveAnimLayer) SkeletalMeshComponent->UnlinkAnimClassLayers(ActiveAnimLayer);
+	SkeletalMeshComponent->LinkAnimClassLayers(DesiredLayer);
+
+	ActiveAnimLayer = DesiredLayer;
+}
+
 void ABaseCharacter::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& Effect, const float Level) const
 {
-	if (!IsValid(Effect) || !GetAbilitySystemComponent())
+	auto* AbilitySystemComponent = GetAbilitySystemComponent();
+	if (!IsValid(Effect) || !AbilitySystemComponent)
 	{
 		DebugHelper::Print(*GetName(), TEXT("Effect is invalid or AbilitySystemComponent is invalid"), FColor::Green, -1, true);
 		return;
 	}
 
-	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	FGameplayEffectContextHandle ContextHandle = AbilitySystemComponent->MakeEffectContext();
 	
 	if (const TObjectPtr<APlayerState> PS = GetPlayerState())
 	{
@@ -141,7 +180,7 @@ void ABaseCharacter::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& Effec
 	{
 		ContextHandle.AddSourceObject(this);
 	}
-	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(Effect, Level, ContextHandle);
+	const FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(Effect, Level, ContextHandle);
     
 	if (!SpecHandle.IsValid())
 	{
@@ -149,5 +188,5 @@ void ABaseCharacter::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& Effec
 		return;   
 	}
 	
-	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }

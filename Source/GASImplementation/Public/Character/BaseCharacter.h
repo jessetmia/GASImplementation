@@ -9,6 +9,7 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+struct FAnimLayerEntry;
 class UBaseAttributeSet;
 class UBaseCharacterMovementComponent;
 class UGameplayEffect;
@@ -54,10 +55,22 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="GAS|Effects")
 	TSubclassOf<UGameplayEffect> InitializeBaseAttributesEffect;
 
+	UPROPERTY(EditDefaultsOnly, Category = "GAS|Animation")
+	TArray<FAnimLayerEntry> CombatAnimLayers;
+
+	UPROPERTY()
+	TSubclassOf<UAnimInstance> ActiveAnimLayer;
+
+	UPROPERTY()
+	bool bAnimTagListenerBound = false;
+
 	virtual void InitializeCharacterMovement();
 	virtual void GiveStartupAbilities();
 	virtual void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& Effect, const float Level = 1.f) const;
 	virtual void InitializeAttributes() const;
 	virtual void ApplyStartupEffects() const;
 	virtual void OnMovementSpeedChanged(const FOnAttributeChangeData& OnAttributeChangeData);
+
+	void OnAnimStateTagChanged(const FGameplayTag Tag, const int32 NewCount);
+
 };

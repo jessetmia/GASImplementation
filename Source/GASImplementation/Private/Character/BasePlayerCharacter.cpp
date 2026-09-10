@@ -9,6 +9,7 @@
 #include "GameFramework/PlayerState.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Character/Movement/BaseCharacterMovementComponent.h"
+#include "GameplayTags/BaseTags.h"
 #include "Player/BasePlayerState.h"
 
 
@@ -75,11 +76,18 @@ void ABasePlayerCharacter::SetupCameraComponents()
 void ABasePlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	
-	if (!IsValid(GetAbilitySystemComponent()) || !HasAuthority()) return;
 
-	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
-	OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
+	auto* AbilitySystemComponent = GetAbilitySystemComponent();
+	
+	if (!IsValid(AbilitySystemComponent) || !HasAuthority()) return;
+
+	AbilitySystemComponent->InitAbilityActorInfo(GetPlayerState(), this);
+	OnASCInitialized.Broadcast(AbilitySystemComponent, GetAttributeSet());
+
+	AbilitySystemComponent->RegisterGameplayTagEvent(
+			FGameplayTag::RequestGameplayTag(TEXT("BaseTags.Abilities.Categories")),
+			EGameplayTagEventType::NewOrRemoved
+		).AddUObject(this, &ThisClass::OnAnimStateTagChanged);
 	
 	GiveStartupAbilities();
 	InitializeAttributes();
@@ -91,10 +99,21 @@ void ABasePlayerCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	
-	if (!IsValid(GetAbilitySystemComponent())) return;
+	auto* AbilitySystemComponent = GetAbilitySystemComponent();
+	
+	if (!IsValid(AbilitySystemComponent)) return;
 
-	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
-	OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
+	AbilitySystemComponent->InitAbilityActorInfo(GetPlayerState(), this);
+	OnASCInitialized.Broadcast(AbilitySystemComponent, GetAttributeSet());
 	InitializeCharacterMovement();
+
+	if (!bAnimTagListenerBound)
+	{
+		AbilitySystemComponent->RegisterGameplayTagEvent(
+				FGameplayTag::RequestGameplayTag(TEXT("BaseTags.Abilities.Categories")),
+				EGameplayTagEventType::NewOrRemoved
+			).AddUObject(this, &ThisClass::OnAnimStateTagChanged);
+		bAnimTagListenerBound = true;
+	}
 }
 
