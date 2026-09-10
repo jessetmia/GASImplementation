@@ -109,6 +109,13 @@ void ABasePlayerController::CrouchReleased()
 void ABasePlayerController::Move(const FInputActionValue& Value)
 {
 	if (!IsValid(GetPawn())) return;
+
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn());
+	if (IsValid(ASC))
+	{
+		if (ASC->HasMatchingGameplayTag(BaseTags::Abilities::CrowdControl::Stunned)) return;
+	}
+	
 	const FVector2D MoveVector = Value.Get<FVector2D>();
 
 	const FRotator YawRotation(0, GetControlRotation().Yaw, 0);

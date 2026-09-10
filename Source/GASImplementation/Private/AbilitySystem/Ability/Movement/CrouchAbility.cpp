@@ -10,6 +10,8 @@
 UCrouchAbility::UCrouchAbility()
 {
 	SetTagData(BaseTags::Abilities::Movement::Crouch);
+
+	ActivationBlockedTags.AddTag(BaseTags::Abilities::CrowdControl::Stunned);
 }
 
 void UCrouchAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

@@ -34,9 +34,13 @@ public:
 	FASCInitialize OnASCInitialized;
 	
 	FORCEINLINE virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return nullptr; }
-	FORCEINLINE virtual TObjectPtr<UBaseAttributeSet> GetAttributeSet() const { return nullptr;}
+	FORCEINLINE virtual UBaseAttributeSet* GetAttributeSet() const { return nullptr;}
+	FORCEINLINE virtual UMovementAttributeSet* GetMovementAttributeSet() const { return nullptr;}
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS|Debug")
+	bool bDrawDebugMessages = false;
+	
 	UPROPERTY(EditDefaultsOnly, Category="GAS|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 	
@@ -48,8 +52,8 @@ protected:
 
 	virtual void InitializeCharacterMovement();
 	virtual void GiveStartupAbilities();
-	void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& Effect, const float Level = 1.f) const;
-	void InitializeAttributes() const;
-	void ApplyStartupEffects() const;
-	void OnMovementSpeedChanged(const FOnAttributeChangeData& OnAttributeChangeData);
+	virtual void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& Effect, const float Level = 1.f) const;
+	virtual void InitializeAttributes() const;
+	virtual void ApplyStartupEffects() const;
+	virtual void OnMovementSpeedChanged(const FOnAttributeChangeData& OnAttributeChangeData);
 };

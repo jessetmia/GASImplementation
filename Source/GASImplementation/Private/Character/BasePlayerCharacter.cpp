@@ -30,7 +30,7 @@ UAbilitySystemComponent* ABasePlayerCharacter::GetAbilitySystemComponent() const
 	return PState->GetAbilitySystemComponent();
 }
 
-TObjectPtr<UBaseAttributeSet> ABasePlayerCharacter::GetAttributeSet() const
+UBaseAttributeSet* ABasePlayerCharacter::GetAttributeSet() const
 {
 	const TObjectPtr<ABasePlayerState> PState = Cast<ABasePlayerState>(GetPlayerState());
 	if (!IsValid(PState)) return nullptr;

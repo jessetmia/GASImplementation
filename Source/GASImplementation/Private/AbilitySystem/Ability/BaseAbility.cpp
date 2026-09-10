@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Ability/BaseAbility.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "Character/BaseCharacter.h"
 #include "Character/BasePlayerCharacter.h"
@@ -49,7 +50,7 @@ void UBaseAbility::ApplyEffect(const FGameplayEventData& EventData)
 		return;
 	}
 
-	UBaseAbilitySystemComponent* TargetAbilitySystemComponent = EventData.Target->FindComponentByClass<UBaseAbilitySystemComponent>();
+	TObjectPtr<UAbilitySystemComponent> TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(const_cast<AActor*>(EventData.Target.Get()));
 	if (!TargetAbilitySystemComponent)
 	{
 		const ABasePlayerCharacter* Char = Cast<ABasePlayerCharacter>(EventData.Target);
@@ -80,9 +81,6 @@ FGameplayEffectSpecHandle UBaseAbility::CreateSpecHandle(
 	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
 	
 	const FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(EffectClass, EffectLevel, ContextHandle);
-
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *SpecHandle.Data->GetEffectContext().GetSourceObject()->GetName());
-	
 	if (!SpecHandle.IsValid())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Failed to create spec for effect: %s"), *EffectClass->GetName());
@@ -96,8 +94,21 @@ FGameplayEffectSpecHandle UBaseAbility::CreateSpecHandle(
 	return SpecHandle;
 }
 
+void UBaseAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+{
+	Super::OnGiveAbility(ActorInfo, Spec);
+
+	if (ActivationPolicy == EAbilityActivationPolicy::OnGiven)
+	{
+		if (ActorInfo && !Spec.IsActive())
+		{
+			ActorInfo->AbilitySystemComponent->TryActivateAbility(Spec.Handle);
+		}
+	}
+}
+
 void UBaseAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+                                   const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
