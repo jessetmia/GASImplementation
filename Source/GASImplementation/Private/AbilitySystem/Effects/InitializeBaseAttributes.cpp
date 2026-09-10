@@ -3,7 +3,8 @@
 
 #include "AbilitySystem/Effects/InitializeBaseAttributes.h"
 
-#include "AbilitySystem/BaseAttributeSet.h"
+#include "AbilitySystem/AttributeSets/MovementAttributeSet.h"
+#include "AbilitySystem/AttributeSets/StaminaAttributeSet.h"
 
 UInitializeBaseAttributes::UInitializeBaseAttributes()
 {
@@ -11,21 +12,21 @@ UInitializeBaseAttributes::UInitializeBaseAttributes()
 
 	// Add modifier for MaxStamina
 	FGameplayModifierInfo MaxStaminaModifier;
-	MaxStaminaModifier.Attribute = UBaseAttributeSet::GetMaxStaminaAttribute();
+	MaxStaminaModifier.Attribute = UStaminaAttributeSet::GetMaxStaminaAttribute();
 	MaxStaminaModifier.ModifierOp = EGameplayModOp::Override;
 	MaxStaminaModifier.ModifierMagnitude = FScalableFloat(100.0f);
 	Modifiers.Add(MaxStaminaModifier);
-
+	
 	// Add modifier for Stamina
 	FGameplayModifierInfo StaminaModifier;
-	StaminaModifier.Attribute = UBaseAttributeSet::GetStaminaAttribute();
+	StaminaModifier.Attribute = UStaminaAttributeSet::GetStaminaAttribute();
 	StaminaModifier.ModifierOp = EGameplayModOp::Override;
 	StaminaModifier.ModifierMagnitude = FScalableFloat(100.0f);
 	Modifiers.Add(StaminaModifier);
 
 	// Add modifier for MovementSpeed
 	FGameplayModifierInfo MovementSpeedModifier;
-	MovementSpeedModifier.Attribute = UBaseAttributeSet::GetMovementSpeedAttribute();
+	MovementSpeedModifier.Attribute = UMovementAttributeSet::GetMovementSpeedAttribute();
 	MovementSpeedModifier.ModifierOp = EGameplayModOp::Override;
 	MovementSpeedModifier.ModifierMagnitude = FScalableFloat(600.0f);
 	Modifiers.Add(MovementSpeedModifier);

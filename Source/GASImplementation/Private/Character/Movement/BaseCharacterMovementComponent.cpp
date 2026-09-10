@@ -2,6 +2,8 @@
 
 
 #include "Character/Movement/BaseCharacterMovementComponent.h"
+
+#include "AbilitySystem/AttributeSets/MovementAttributeSet.h"
 #include "Character/BaseCharacter.h"
 
 float UBaseCharacterMovementComponent::GetMaxSpeed() const
@@ -25,9 +27,9 @@ float UBaseCharacterMovementComponent::CalculateMaxRunSpeed() const
 	float GASWalkSpeed = MaxWalkSpeed;
 	
 	const UAbilitySystemComponent* ASC = Char->GetAbilitySystemComponent();
-	if (ASC)
+	if (IsValid(ASC))
 	{
-		GASWalkSpeed = ASC->GetNumericAttribute(UBaseAttributeSet::GetMovementSpeedAttribute());
+		GASWalkSpeed = ASC->GetNumericAttribute(UMovementAttributeSet::GetMovementSpeedAttribute());
 	}
 
 	const FVector CurrentAcceleration = Acceleration;

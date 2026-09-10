@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
 #include "AttributeSet.h"
-#include "AbilitySystem/BaseAttributeSet.h"
+#include "AbilitySystem/AttributeSets/BaseAttributeSet.h"
 #include "MovementAttributeSet.generated.h"
 
 /**
