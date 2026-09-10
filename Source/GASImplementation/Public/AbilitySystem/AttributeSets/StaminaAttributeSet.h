@@ -10,26 +10,13 @@
 
 class UExhaustedEffect;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnAttributeChanged, const FGameplayAttribute& /*Attribute*/, float /*NewValue*/);
-
 UCLASS()
 class GASIMPLEMENTATION_API UStaminaAttributeSet : public UBaseAttributeSet
 {
 	GENERATED_BODY()
 	
-<<<<<<<< HEAD:Source/GASImplementation/Public/AbilitySystem/AttributeSets/StaminaAttributeSet.h
 public:
 	UStaminaAttributeSet();
-========
-	UPROPERTY()
-	FOnAttributeChanged OnAttributeChanged;
-	
-	UPROPERTY(BlueprintAssignable)
-	FAttrbutesInitialized OnAttrbutesInitialized;
-
-	UPROPERTY(ReplicatedUsing=OnRep_AttributesInitialized)
-	bool bAttributesInitialized = false;
->>>>>>>> master:Source/GASImplementation/Public/AbilitySystem/BaseAttributeSet.h
 	
 	/** Resources **/
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Stamina)
