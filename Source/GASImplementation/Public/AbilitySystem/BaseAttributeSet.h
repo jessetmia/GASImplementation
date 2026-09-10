@@ -17,6 +17,8 @@ GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 class UExhaustedEffect;
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnAttributeChanged, const FGameplayAttribute& /*Attribute*/, float /*NewValue*/);
+
 UCLASS()
 class GASIMPLEMENTATION_API UBaseAttributeSet : public UAttributeSet
 {
@@ -24,6 +26,9 @@ class GASIMPLEMENTATION_API UBaseAttributeSet : public UAttributeSet
 
 public:
 	UBaseAttributeSet();
+	
+	UPROPERTY()
+	FOnAttributeChanged OnAttributeChanged;
 	
 	UPROPERTY(BlueprintAssignable)
 	FAttrbutesInitialized OnAttrbutesInitialized;
