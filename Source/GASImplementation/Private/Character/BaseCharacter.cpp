@@ -4,6 +4,7 @@
 #include "Character/BaseCharacter.h"
 
 #include "AbilitySystem/BaseAttributeSet.h"
+#include "AbilitySystem/AttributeSets/MovementAttributeSet.h"
 #include "GameFramework/PlayerState.h"
 #include "Character/Movement/BaseCharacterMovementComponent.h"
 #include "Utils/DebugHelper.h"
@@ -27,16 +28,16 @@ void ABaseCharacter::InitializeCharacterMovement()
 {
 	float MaxWalkSpeed = 500.f;
 	
-	if (const TObjectPtr<UBaseAttributeSet> AttributeSet = Cast<UBaseAttributeSet>(GetAttributeSet()))
+	if (const UMovementAttributeSet* MovementAttributeSet = GetMovementAttributeSet())
 	{
-		if (IsValid(AttributeSet))
+		if (IsValid(MovementAttributeSet))
 		{
-			if (AttributeSet->MovementSpeed.GetCurrentValue() <= 0.f) return;
-			MaxWalkSpeed = AttributeSet->MovementSpeed.GetCurrentValue();
+			if (MovementAttributeSet->MovementSpeed.GetCurrentValue() <= 0.f) return;
+			MaxWalkSpeed = MovementAttributeSet->MovementSpeed.GetCurrentValue();
 		}
 		
 		GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(
-			AttributeSet->GetMovementSpeedAttribute()
+			MovementAttributeSet->GetMovementSpeedAttribute()
 		).AddUObject(this, &ThisClass::OnMovementSpeedChanged);
 	}
 	

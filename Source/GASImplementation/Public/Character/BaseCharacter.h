@@ -35,6 +35,7 @@ public:
 	
 	FORCEINLINE virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return nullptr; }
 	FORCEINLINE virtual UBaseAttributeSet* GetAttributeSet() const { return nullptr;}
+	FORCEINLINE virtual UMovementAttributeSet* GetMovementAttributeSet() const { return nullptr;}
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS|Debug")
