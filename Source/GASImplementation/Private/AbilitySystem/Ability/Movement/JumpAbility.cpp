@@ -3,7 +3,7 @@
 
 #include "AbilitySystem/Ability/Movement/JumpAbility.h"
 
-#include "Character/BasePlayerCharacter.h"
+#include "Character/BaseCharacter.h"
 #include "GameplayTags/BaseTags.h"
 #include "Utils/DebugHelper.h"
 
@@ -12,25 +12,24 @@ UJumpAbility::UJumpAbility()
 	SetTagData(BaseTags::Abilities::Movement::Jump);
 
 	ActivationBlockedTags.AddTag(BaseTags::Abilities::CrowdControl::Stunned);
+	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }
 
 void UJumpAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	PlayerCharacter = Cast<ABasePlayerCharacter>(GetAvatarActorFromActorInfo());
+	PlayerCharacter = Cast<ABaseCharacter>(GetAvatarActorFromActorInfo());
 
 	if (!IsValid(PlayerCharacter))
 	{
 		DebugHelper::Print(*GetName(), TEXT("ActivateAbility: PlayerCharacter is invalid"), FColor::Green, -1, true);
+		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
 		return;
 	}
-
-	if (CommitAbility(Handle, ActorInfo, ActivationInfo))
-	{
-		PlayerCharacter->Jump();
-	}
+	
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	
+	PlayerCharacter->Jump();
 }
 
 void UJumpAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,

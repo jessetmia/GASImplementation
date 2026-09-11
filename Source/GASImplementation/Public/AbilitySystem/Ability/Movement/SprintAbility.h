@@ -6,7 +6,6 @@
 #include "AbilitySystem/Ability/BaseAbility.h"
 #include "SprintAbility.generated.h"
 
-class ABasePlayerCharacter;
 /**
  * 
  */
