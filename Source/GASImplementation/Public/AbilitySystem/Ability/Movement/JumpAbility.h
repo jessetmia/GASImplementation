@@ -6,7 +6,7 @@
 #include "AbilitySystem/Ability/BaseAbility.h"
 #include "JumpAbility.generated.h"
 
-class ABasePlayerCharacter;
+class ABaseCharacter;
 /**
  * 
  */
@@ -20,7 +20,7 @@ public:
 
 protected:
 	UPROPERTY()
-	TObjectPtr<ABasePlayerCharacter> PlayerCharacter = nullptr;
+	TObjectPtr<ABaseCharacter> PlayerCharacter = nullptr;
 	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
