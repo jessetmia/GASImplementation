@@ -2,7 +2,8 @@
 
 
 #include "AbilitySystem/Effects/SprintEffect.h"
-#include "AbilitySystem/BaseAttributeSet.h"
+#include "AbilitySystem/AttributeSets/MovementAttributeSet.h"
+#include "AbilitySystem/AttributeSets/StaminaAttributeSet.h"
 #include "GameplayEffectComponents/TargetTagRequirementsGameplayEffectComponent.h"
 #include "GameplayTags/BaseTags.h"
 
@@ -24,7 +25,7 @@ USprintSpeedEffect::USprintSpeedEffect()
 {
 	
 	FGameplayModifierInfo MovementSpeedModifier;
-	MovementSpeedModifier.Attribute = UBaseAttributeSet::GetMovementSpeedAttribute();
+	MovementSpeedModifier.Attribute = UMovementAttributeSet::GetMovementSpeedAttribute();
 	MovementSpeedModifier.ModifierOp = EGameplayModOp::Multiplicitive;
 	MovementSpeedModifier.ModifierMagnitude = FScalableFloat(1.5f);
 	Modifiers.Add(MovementSpeedModifier);
@@ -36,7 +37,7 @@ USprintStaminaDrainEffect::USprintStaminaDrainEffect()
 	bExecutePeriodicEffectOnApplication = true;
 	
 	FGameplayModifierInfo StaminaReductionModifier;
-	StaminaReductionModifier.Attribute = UBaseAttributeSet::GetStaminaAttribute();
+	StaminaReductionModifier.Attribute = UStaminaAttributeSet::GetStaminaAttribute();
 	StaminaReductionModifier.ModifierOp = EGameplayModOp::Additive;
 	StaminaReductionModifier.ModifierMagnitude = FScalableFloat(-1.f);
 	Modifiers.Add(StaminaReductionModifier);

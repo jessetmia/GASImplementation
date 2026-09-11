@@ -3,7 +3,7 @@
 
 #include "Character/BaseCharacter.h"
 
-#include "AbilitySystem/BaseAttributeSet.h"
+#include "AbilitySystem/AttributeSets/BaseAttributeSet.h"
 #include "AbilitySystem/AttributeSets/MovementAttributeSet.h"
 #include "GameFramework/PlayerState.h"
 #include "Character/Movement/BaseCharacterMovementComponent.h"

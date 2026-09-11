@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/Attributes/StaminaAttributeSet.h"
+#include "AbilitySystem/AttributeSets/StaminaAttributeSet.h"
 
 #include "GameplayEffectExtension.h"
 #include "AbilitySystem/Effects/ExhaustedEffect.h"
@@ -34,7 +34,6 @@ void UStaminaAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribut
 	{
 		NewValue =  FMath::Max(NewValue, 0.0f);
 	}
-	
 }
 
 void UStaminaAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -43,16 +42,9 @@ void UStaminaAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCal
 	
 	if (Data.EvaluatedData.Attribute == GetMaxStaminaAttribute())
 	{
-		OnAttributeChanged.Broadcast(Data.EvaluatedData.Attribute, GetMaxStamina());
-		
 		if (GetMaxStamina() >= GetStamina()) return;
-		
 		SetStamina(FMath::Clamp(GetStamina(), 0.0f, GetMaxStamina())); 
 	}
-	
-	// Stamina changed, let's get that update out. 
-	OnAttributeChanged.Broadcast(GetStaminaAttribute(), GetStamina()); 
-	
 	// @TODO: This can eventually be moved into a BP Gameplay Effect that is always assigned to the player 
 	// We would only activate it if Stamina is equal to 0, though this is a topic for greater discussion. 
 	// Do we modify the GE so that the user is exhausted until their stamina is 50~100% and then remove it? If so
@@ -79,11 +71,9 @@ void UStaminaAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCal
 void UStaminaAttributeSet::OnRep_Stamina(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, Stamina, OldValue);
-    OnAttributeChanged.Broadcast(GetStaminaAttribute(), GetStamina());
 }
 
 void UStaminaAttributeSet::OnRep_MaxStamina(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, MaxStamina, OldValue);
-    OnAttributeChanged.Broadcast(GetMaxStaminaAttribute(), GetMaxStamina());
 }

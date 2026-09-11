@@ -2,7 +2,6 @@
 
 
 #include "Player/BasePlayerState.h"
-
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 
 ABasePlayerState::ABasePlayerState()
@@ -11,5 +10,5 @@ ABasePlayerState::ABasePlayerState()
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 	
-	AttributeSet = CreateDefaultSubobject<UBaseAttributeSet>(TEXT("AttributeSet"));
+	MovementAttributeSet = CreateDefaultSubobject<UMovementAttributeSet>(TEXT("MovementAttributeSet"));
 }

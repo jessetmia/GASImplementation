@@ -9,6 +9,7 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+class UMovementAttributeSet;
 class UBaseAttributeSet;
 class UBaseCharacterMovementComponent;
 class UGameplayEffect;

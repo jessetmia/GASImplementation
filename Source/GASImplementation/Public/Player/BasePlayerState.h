@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
-#include "AbilitySystem/BaseAttributeSet.h"
+#include "AbilitySystem/AttributeSets/MovementAttributeSet.h"
 #include "GameFramework/PlayerState.h"
 #include "BasePlayerState.generated.h"
 
@@ -20,12 +20,12 @@ public:
 	ABasePlayerState();
 	
 	FORCEINLINE virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComponent; }
-	virtual TObjectPtr<UBaseAttributeSet> GetAttributeSet() const { return AttributeSet; }
+	virtual TObjectPtr<UMovementAttributeSet> GetMovementAttributeSet() const { return MovementAttributeSet; }
 
 protected:
 	UPROPERTY(VisibleInstanceOnly, Category="GAS|Abilities")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(VisibleInstanceOnly, Category="GAS|Abilities")
-	TObjectPtr<UBaseAttributeSet> AttributeSet;
+	TObjectPtr<UMovementAttributeSet> MovementAttributeSet;
 };

@@ -30,12 +30,12 @@ UAbilitySystemComponent* ABasePlayerCharacter::GetAbilitySystemComponent() const
 	return PState->GetAbilitySystemComponent();
 }
 
-UBaseAttributeSet* ABasePlayerCharacter::GetAttributeSet() const
+UMovementAttributeSet* ABasePlayerCharacter::GetMovementAttributeSet() const
 {
 	const TObjectPtr<ABasePlayerState> PState = Cast<ABasePlayerState>(GetPlayerState());
 	if (!IsValid(PState)) return nullptr;
 	
-	return PState->GetAttributeSet();
+	return PState->GetMovementAttributeSet();
 }
 
 void ABasePlayerCharacter::AdjustCamera(float CameraLength)
@@ -79,7 +79,7 @@ void ABasePlayerCharacter::PossessedBy(AController* NewController)
 	if (!IsValid(GetAbilitySystemComponent()) || !HasAuthority()) return;
 
 	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
-	OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
+	// OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
 	
 	GiveStartupAbilities();
 	InitializeAttributes();
@@ -94,7 +94,7 @@ void ABasePlayerCharacter::OnRep_PlayerState()
 	if (!IsValid(GetAbilitySystemComponent())) return;
 
 	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
-	OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
+	// OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
 	InitializeCharacterMovement();
 }
 

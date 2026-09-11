@@ -18,7 +18,7 @@ public:
 	explicit ABasePlayerCharacter(const FObjectInitializer& ObjectInitializer);
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	virtual UBaseAttributeSet* GetAttributeSet() const override;
+	virtual UMovementAttributeSet* GetMovementAttributeSet() const override;
 
 	
 	FORCEINLINE float GetArmLength() const { return ArmLength; }
