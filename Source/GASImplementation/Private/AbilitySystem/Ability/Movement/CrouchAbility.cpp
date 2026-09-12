@@ -3,7 +3,7 @@
 
 #include "AbilitySystem/Ability/Movement/CrouchAbility.h"
 
-#include "Character/BaseCharacter.h"
+#include "Character/BasePlayerCharacter.h"
 #include "GameplayTags/BaseTags.h"
 #include "Utils/DebugHelper.h"
 
@@ -20,7 +20,7 @@ void UCrouchAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	
-	PlayerCharacter = Cast<ABaseCharacter>(GetAvatarActorFromActorInfo());
+	PlayerCharacter = Cast<ACharacter>(GetAvatarActorFromActorInfo());
 
 	if (!IsValid(PlayerCharacter))
 	{

@@ -35,7 +35,7 @@ public:
 	FASCInitialize OnASCInitialized;
 	
 	FORCEINLINE virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return nullptr; }
-	FORCEINLINE virtual UBaseAttributeSet* GetAttributeSet() const { return nullptr;}
+	// FORCEINLINE virtual UBaseAttributeSet* GetAttributeSet() const { return nullptr;}
 	FORCEINLINE virtual UMovementAttributeSet* GetMovementAttributeSet() const { return nullptr;}
 
 protected:
@@ -57,4 +57,5 @@ protected:
 	virtual void InitializeAttributes() const;
 	virtual void ApplyStartupEffects() const;
 	virtual void OnMovementSpeedChanged(const FOnAttributeChangeData& OnAttributeChangeData);
+	virtual void BindDelegates();
 };

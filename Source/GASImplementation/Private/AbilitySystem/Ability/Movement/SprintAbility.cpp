@@ -2,9 +2,7 @@
 
 
 #include "AbilitySystem/Ability/Movement/SprintAbility.h"
-
 #include "AbilitySystemComponent.h"
-#include "AbilitySystem/Effects/SprintEffect.h"
 #include "GameplayTags/BaseTags.h"
 
 USprintAbility::USprintAbility()

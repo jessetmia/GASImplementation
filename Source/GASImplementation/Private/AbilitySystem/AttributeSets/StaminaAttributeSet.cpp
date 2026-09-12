@@ -43,8 +43,9 @@ void UStaminaAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCal
 	if (Data.EvaluatedData.Attribute == GetMaxStaminaAttribute())
 	{
 		if (GetMaxStamina() >= GetStamina()) return;
-		SetStamina(FMath::Clamp(GetStamina(), 0.0f, GetMaxStamina())); 
 	}
+	
+	SetStamina(FMath::Clamp(GetStamina(), 0.0f, GetMaxStamina())); 
 	// @TODO: This can eventually be moved into a BP Gameplay Effect that is always assigned to the player 
 	// We would only activate it if Stamina is equal to 0, though this is a topic for greater discussion. 
 	// Do we modify the GE so that the user is exhausted until their stamina is 50~100% and then remove it? If so

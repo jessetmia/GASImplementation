@@ -155,8 +155,10 @@ void ABasePlayerController::CancelTarget()
 void ABasePlayerController::ActivateAbility(const FGameplayTag& AbilityTag) const
 {
 	if (!IsValid(GetCharacter())) return;
+	const ABaseCharacter* BaseCharacter = Cast<ABaseCharacter>(GetCharacter());
+	if (!IsValid(BaseCharacter)) return;
 	
-	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn());
+	UAbilitySystemComponent* ASC = BaseCharacter->GetAbilitySystemComponent();
 	if (!IsValid(ASC)) return;
 
 	ASC->TryActivateAbilitiesByTag(AbilityTag.GetSingleTagContainer());

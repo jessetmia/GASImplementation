@@ -159,10 +159,10 @@ void UBaseAbility::ApplyActiveEffects()
 	{
 		if (!GameplayEffectClass) continue;
 
-		const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(GameplayEffectClass, GetAbilityLevel(), EffectContext);
+		const FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(GameplayEffectClass, GetAbilityLevel());
 		if (SpecHandle.IsValid())
 		{
-			FActiveGameplayEffectHandle Handle = ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+			FActiveGameplayEffectHandle Handle = ApplyGameplayEffectSpecToOwner(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, SpecHandle);
 			AppliedEffectHandles.Add(Handle);
 		}
 	}
@@ -170,7 +170,7 @@ void UBaseAbility::ApplyActiveEffects()
 
 void UBaseAbility::RemoveActiveEffects()
 {
-	if (AppliedEffectHandles.IsEmpty()) return;
+	if (!HasAuthority(&CurrentActivationInfo) || AppliedEffectHandles.IsEmpty()) return;
 
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
 	if (!ASC) return;

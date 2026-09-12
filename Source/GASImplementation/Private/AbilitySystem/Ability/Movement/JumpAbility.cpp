@@ -3,7 +3,7 @@
 
 #include "AbilitySystem/Ability/Movement/JumpAbility.h"
 
-#include "Character/BaseCharacter.h"
+#include "Character/BasePlayerCharacter.h"
 #include "GameplayTags/BaseTags.h"
 #include "Utils/DebugHelper.h"
 
@@ -12,11 +12,22 @@ UJumpAbility::UJumpAbility()
 	SetTagData(BaseTags::Abilities::Movement::Jump);
 
 	ActivationBlockedTags.AddTag(BaseTags::Abilities::CrowdControl::Stunned);
-	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+}
+
+bool UJumpAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
+	const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
+{
+	if (!Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags)) return false;
+	
+	const ABaseCharacter* Character = Cast<ABaseCharacter>(ActorInfo->AvatarActor.Get());
+	if (!IsValid(Character)) return false;
+	
+	return Character && Character->CanJump();
 }
 
 void UJumpAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+                                   const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	PlayerCharacter = Cast<ABaseCharacter>(GetAvatarActorFromActorInfo());
 
@@ -35,8 +46,6 @@ void UJumpAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 void UJumpAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-
 	if (!IsValid(PlayerCharacter))
 	{
 		DebugHelper::Print(*GetName(), TEXT("EndAbility: PlayerCharacter is invalid"), FColor::Green, -1, true);
@@ -45,4 +54,6 @@ void UJumpAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 	
 	PlayerCharacter->StopJumping();
 	PlayerCharacter = nullptr;
+	
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
