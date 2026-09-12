@@ -2,7 +2,6 @@
 
 
 #include "AbilitySystem/Effects/InitializeBaseAttributes.h"
-
 #include "AbilitySystem/AttributeSets/MovementAttributeSet.h"
 #include "AbilitySystem/AttributeSets/StaminaAttributeSet.h"
 
@@ -28,6 +27,6 @@ UInitializeBaseAttributes::UInitializeBaseAttributes()
 	FGameplayModifierInfo MovementSpeedModifier;
 	MovementSpeedModifier.Attribute = UMovementAttributeSet::GetMovementSpeedAttribute();
 	MovementSpeedModifier.ModifierOp = EGameplayModOp::Override;
-	MovementSpeedModifier.ModifierMagnitude = FScalableFloat(600.0f);
+	MovementSpeedModifier.ModifierMagnitude = FScalableFloat(500.0f);
 	Modifiers.Add(MovementSpeedModifier);
 }

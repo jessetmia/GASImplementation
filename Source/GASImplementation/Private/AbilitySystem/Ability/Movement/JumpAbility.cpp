@@ -14,30 +14,38 @@ UJumpAbility::UJumpAbility()
 	ActivationBlockedTags.AddTag(BaseTags::Abilities::CrowdControl::Stunned);
 }
 
-void UJumpAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+bool UJumpAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
+	const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	if (!Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags)) return false;
+	
+	const ABaseCharacter* Character = Cast<ABaseCharacter>(ActorInfo->AvatarActor.Get());
+	if (!IsValid(Character)) return false;
+	
+	return Character && Character->CanJump();
+}
 
-	PlayerCharacter = Cast<ABasePlayerCharacter>(GetAvatarActorFromActorInfo());
+void UJumpAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+                                   const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+	PlayerCharacter = Cast<ABaseCharacter>(GetAvatarActorFromActorInfo());
 
 	if (!IsValid(PlayerCharacter))
 	{
 		DebugHelper::Print(*GetName(), TEXT("ActivateAbility: PlayerCharacter is invalid"), FColor::Green, -1, true);
+		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
 		return;
 	}
-
-	if (CommitAbility(Handle, ActorInfo, ActivationInfo))
-	{
-		PlayerCharacter->Jump();
-	}
+	
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	
+	PlayerCharacter->Jump();
 }
 
 void UJumpAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-
 	if (!IsValid(PlayerCharacter))
 	{
 		DebugHelper::Print(*GetName(), TEXT("EndAbility: PlayerCharacter is invalid"), FColor::Green, -1, true);
@@ -46,4 +54,6 @@ void UJumpAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 	
 	PlayerCharacter->StopJumping();
 	PlayerCharacter = nullptr;
+	
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

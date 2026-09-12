@@ -6,7 +6,7 @@
 #include "AbilitySystem/Ability/BaseAbility.h"
 #include "JumpAbility.generated.h"
 
-class ABasePlayerCharacter;
+class ACharacter;
 /**
  * 
  */
@@ -18,9 +18,11 @@ class GASIMPLEMENTATION_API UJumpAbility : public UBaseAbility
 public:
 	UJumpAbility();
 
+	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const override;
+	
 protected:
 	UPROPERTY()
-	TObjectPtr<ABasePlayerCharacter> PlayerCharacter = nullptr;
+	TObjectPtr<ACharacter> PlayerCharacter = nullptr;
 	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;

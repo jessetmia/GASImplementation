@@ -2,15 +2,14 @@
 
 
 #include "Character/Movement/BaseCharacterMovementComponent.h"
-
-#include "AbilitySystem/AttributeSets/MovementAttributeSet.h"
 #include "Character/BaseCharacter.h"
 
 float UBaseCharacterMovementComponent::GetMaxSpeed() const
 {
 	switch(MovementMode)
 	{
-	case MOVE_Walking: return CalculateMaxRunSpeed();
+	case MOVE_Walking:
+	case MOVE_NavWalking: return CalculateMaxRunSpeed();
 	default: return Super::GetMaxSpeed();
 	}
 }
@@ -18,36 +17,28 @@ float UBaseCharacterMovementComponent::GetMaxSpeed() const
 float UBaseCharacterMovementComponent::CalculateMaxRunSpeed() const
 {
 	
+	const float BaseSpeed = MaxWalkSpeed;
 	const ABaseCharacter* Char = Cast<ABaseCharacter>(GetCharacterOwner());
 
 	if (!IsValid(Char)) return MaxWalkSpeed;
 
 	if (MovementMode != MOVE_Walking  && MovementMode != MOVE_NavWalking) return MaxWalkSpeed;
 	
-	float GASWalkSpeed = MaxWalkSpeed;
-	
-	const UAbilitySystemComponent* ASC = Char->GetAbilitySystemComponent();
-	if (IsValid(ASC))
-	{
-		GASWalkSpeed = ASC->GetNumericAttribute(UMovementAttributeSet::GetMovementSpeedAttribute());
-	}
-
 	const FVector CurrentAcceleration = Acceleration;
-    
-	if (CurrentAcceleration.IsNearlyZero()) return GASWalkSpeed;
-
+	if (CurrentAcceleration.IsNearlyZero()) return BaseSpeed;
+	
 	const FVector ActorForward = Char->GetActorForwardVector();
-
+	
 	const FVector MovementDirection = CurrentAcceleration.GetSafeNormal();
 	const float DotProduct = FVector::DotProduct(MovementDirection, ActorForward);
-
-	if (DotProduct < -0.2f) return GASWalkSpeed * BackwardSpeedMultiplier;
-
+	
+	if (DotProduct < -0.2f) return BaseSpeed * BackwardSpeedMultiplier;
+	
 	const float AbsDot = FMath::Abs(DotProduct);
 	if (AbsDot < DiagonalThreshold) // Mostly sideways
 	{
-		return GASWalkSpeed * StrafeSpeedMultiplier; // Slower than forward, faster than backward
+		return BaseSpeed * StrafeSpeedMultiplier; // Slower than forward, faster than backward
 	}
 	
-	return GASWalkSpeed;
+	return BaseSpeed;
 }

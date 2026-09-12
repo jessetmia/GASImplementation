@@ -20,7 +20,7 @@ void UCrouchAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	
-	PlayerCharacter = Cast<ABasePlayerCharacter>(GetAvatarActorFromActorInfo());
+	PlayerCharacter = Cast<ACharacter>(GetAvatarActorFromActorInfo());
 
 	if (!IsValid(PlayerCharacter))
 	{

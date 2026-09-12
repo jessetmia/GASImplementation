@@ -18,6 +18,7 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	// Tick and refresh bone anims on dedicated server
 	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 }
+
 //region Startup Props
 UBaseCharacterMovementComponent* ABaseCharacter::GetCharacterMovement() const
 {
@@ -26,22 +27,7 @@ UBaseCharacterMovementComponent* ABaseCharacter::GetCharacterMovement() const
 
 void ABaseCharacter::InitializeCharacterMovement()
 {
-	float MaxWalkSpeed = 500.f;
-	
-	if (const UMovementAttributeSet* MovementAttributeSet = GetMovementAttributeSet())
-	{
-		if (IsValid(MovementAttributeSet))
-		{
-			if (MovementAttributeSet->MovementSpeed.GetCurrentValue() <= 0.f) return;
-			MaxWalkSpeed = MovementAttributeSet->MovementSpeed.GetCurrentValue();
-		}
-		
-		GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(
-			MovementAttributeSet->GetMovementSpeedAttribute()
-		).AddUObject(this, &ThisClass::OnMovementSpeedChanged);
-	}
-	
-	GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = 500.f;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
 	GetCharacterMovement()->JumpZVelocity = 500.f;
 	GetCharacterMovement()->AirControl = 0.35f;
@@ -116,8 +102,31 @@ void ABaseCharacter::ApplyStartupEffects() const
 
 void ABaseCharacter::OnMovementSpeedChanged(const FOnAttributeChangeData& OnAttributeChangeData)
 {
-	if (!IsValid(GetCharacterMovement())) return;
-	GetCharacterMovement()->MaxWalkSpeed = OnAttributeChangeData.NewValue;
+	UBaseCharacterMovementComponent* CMC = GetCharacterMovement();
+	if (!CMC) return;
+	CMC->MaxWalkSpeed = OnAttributeChangeData.NewValue;
+}
+
+void ABaseCharacter::BindDelegates()
+{
+	const UMovementAttributeSet* MovementAttributeSet = GetMovementAttributeSet();
+	if (!IsValid(MovementAttributeSet))
+	{
+		UE_LOG(LogTemp, Error, TEXT("MovementAS not yet set!"));
+		return;
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("Initializing MovementSpeedAttribute Delegate binding."));
+	
+	GetCharacterMovement()->MaxWalkSpeed = MovementAttributeSet->GetMovementSpeed();
+	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(
+		MovementAttributeSet->GetMovementSpeedAttribute()
+	).RemoveAll(this);
+	
+	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(
+		MovementAttributeSet->GetMovementSpeedAttribute()
+	).AddUObject(this, &ThisClass::OnMovementSpeedChanged);
+	
 }
 
 void ABaseCharacter::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& Effect, const float Level) const
